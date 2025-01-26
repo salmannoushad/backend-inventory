@@ -68,5 +68,46 @@ exports.updateProduct = async (req, res) => {
     }
 };
 
+exports.getAnalytics = async (req, res) => {
+    console.log('===============');
+
+    try {
+        const categoryStats = await Product.aggregate([
+            { $match: { category: { $exists: true, $ne: null } } }, // Ensure category exists
+            { $group: { _id: "$category", count: { $sum: 1 } } },
+        ]);
+
+        const recentProducts = await Product.find({})
+            .sort({ createdAt: -1 }) // Sort by creation time
+            .limit(10);
+
+        res.status(200).json({
+            categoryStats,
+            recentProducts,
+        });
+    } catch (error) {
+        console.error("Error fetching analytics:", error.message, error.stack);
+        res.status(500).json({ message: "Error fetching analytics", error });
+    }
+};
+
+// Get All Products (with Search)
+exports.getSearchProducts = async (req, res) => {
+    try {
+        const { name, category } = req.query;
+
+        const query = {};
+        if (name) query.name = { $regex: name, $options: "i" }; // Case-insensitive search
+        if (category) query.category = category;
+
+        const products = await Product.find(query);
+
+        res.status(200).json(products);
+    } catch (error) {
+        res.status(500).json({ message: "Error fetching products", error });
+    }
+};
+
+
 
 
