@@ -36,8 +36,8 @@ Follow the steps below to set up the backend locally.
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/your-repo/barcode-inventory-system-backend.git
-cd barcode-inventory-system-backend
+git clone https://github.com/salmannoushad/backend-inventory.git
+cd backend-inventory
 ```
 
 # Installation
